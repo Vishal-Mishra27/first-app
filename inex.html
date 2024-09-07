@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- for sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    Submit Form
+    <form action="" id="userform">
+        <label for="">Name</label>
+        <input type="text" placeholder="enter your name" id="name">
+        <br>
+        <label for="">email</label>
+        <input type="email" placeholder="enter your email" id="email">
+        <br>
+        <label for="">age</label>
+        <input type="number" placeholder="enter your age" id="age">
+        <br>
+
+        <label for="">Gender</label>
+        <input type="radio" name="Gender" id="male" value="male" required>
+        <label for=""> male</label>
+        <input type="radio" name="Gender" id="female" value="female" required>
+        <label for="">female</label>
+        <br>
+
+
+        <label for="">status</label>
+        <input type="checkbox" name="status" value="maried" id="maried" class="status">Maried
+        <input type="checkbox" name="status" value="unmaried" id="unmaried" class="status">Unmaried
+        <br>
+
+
+
+        <button type="submit">Submit</button>
+
+
+    </form>
+    <!-- <h3>Submitted Entries</h3>
+<div id="entriesDisplay"> -->
+
+    </div>
+
+
+    <!-- table-formate -->
+    <h2>submitted details</h2>
+    <table id="entriesTable" border="2px">
+        <thead>
+            <th>name</th>
+            <th>age</th>
+            <th>gender</th>
+            <th>Email</th>
+        </thead>
+        <tbody>
+            <!-- data -->
+
+        </tbody>
+    </table>
+
+    <!-- <p id="list">hello</p> -->
+    <!-- <table id="table">
+    <thead>
+        <tr>name</tr>
+        <tr>email</tr>
+        <tr>age</tr>
+        <tr>gender</tr>
+    </thead>
+    <tbody id="tbody1">
+        <td id="td1">v</td>
+        <td id="td2">w</td>
+        <td id="td3">w</td>
+        <td id="td4">m</td>
+    </tbody>
+ </table> -->
+</body>
+<script>
+    document.getElementById('userform').addEventListener('submit', function (event) {
+        event.preventDefault(); //hold the data in console or prevent the form value
+        // get form data:-
+        const name = document.getElementById('name').value
+        const email = document.getElementById('email').value
+        const age = document.getElementById('age').value
+        const Gender = document.querySelector('input[name=Gender]:checked').value
+        //    const status=document.querySelector('input[name=status]:checked').value
+        const selectedSubjects = [];
+        document.querySelectorAll('input[name=status]:checked').forEach(function (checkbox) {
+            selectedSubjects.push(checkbox.value)
+        }
+        )
+
+        // create an object to hold data from data
+        const formData = {
+            name: name,
+            email: email,
+            age: age,
+            gender: Gender,
+            selectedSubjects: selectedSubjects
+            // status:status
+        }
+
+        //    retrive data from localstorage
+        let allentries = JSON.parse(localStorage.getItem('entries')) || [];
+
+        // add the data form data to  array
+        allentries.push(formData);
+
+        // save the updated array back to localstorage
+        localStorage.setItem('entries', JSON.stringify(allentries));
+
+        // console the save data
+        console.log('All Entries:', JSON.parse(localStorage.getItem('entries')));
+
+        // console.log(formData)
+
+
+
+        // var obj = formData
+        //     var result = Object.keys(obj).map((key) => [key, obj[key]]);
+        //     console.log(result);
+        //     for (let i = 0; i < Object.keys(formData).length; i++) {
+        //         console.log(Object.keys(formData)[i] + " is key and its value is " + formData[Object.keys(formData)[i]])
+        //         document.getElementById('list').innerHTML += `${formData[Object.keys(formData)[i]]}<br>`
+        //     }
+        //    document.getElementById('list').innerHTML+=result
+
+
+        // for sweet alert
+        Swal.fire({
+            title: "Successful!",
+            text: "You clicked the button!",
+            icon: "success"
+        });
+
+
+        // reset the form
+        document.getElementById('userform').reset();
+        // displaylatestEntry(formData)
+        displayEntries()
+
+    })
+
+    // function to display the latest entry
+    // function displaylatestEntry(entry){
+    //     const entriesDisplay=document.getElementById('entriesDisplay');
+
+    //     const entryDiv=document.createElement('div');
+    //     entryDiv.textContent=`Name:${entry.name}, email:${entry.email}, Age:${entry.age} , Gender:${entry.gender}`;
+
+    //     entriesDisplay.appendChild(entryDiv);
+    // }
+
+    // display entries on page load
+    //     function displayAllEntries(){
+    //         const allEntries=JSON.parse(localStorage.getItem('entries')) || [];
+    //         allEntries.forEach(function(entry){
+    //         displaylatestEntry(entry)
+    //         })
+    //     }
+
+    // displayAllEntries()
+
+
+
+    // display entry in table
+    function displayEntries() {
+        const entriesTableBody = document.querySelector('tbody')
+        entriesTableBody.innerHTML = '';
+        const allEntries = JSON.parse(localStorage.getItem('entries')) || [];
+        allEntries.forEach(function (entry) {
+            const row = document.createElement('tr')
+            row.innerHTML = `
+            <td>${entry.name}<td>
+            <td>${entry.email}<td>
+            <td>${entry.age}<td>
+            <td>${entry.gender}<td>
+            <td>${entry.selectedSubjects.join(', ')}<td>
+            
+                `;
+            entriesTableBody.appendChild(row);
+        })
+    }
+
+
+</script>
+
+</html>
